@@ -1,4 +1,4 @@
-import re
+# import re
 # Take in Time to check later
 import time
 start_time = time.time()
@@ -18,7 +18,6 @@ total = 0
 for line in inputFileLines:
     lineCount += 1
     charCount = 0
-
 
     # Speedy
     # Time taken: 0.0009992122650146484s
