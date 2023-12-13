@@ -1,67 +1,55 @@
-# import re
-# Take in Time to check later
 import time
+import re
+
 start_time = time.time()
 
-# Grab all lines
-inputFile = open('inputs/input_day_1.txt', 'r')
-inputFileLines = inputFile.readlines()
 
-# TEST
-# Define counter
-lineCount = 0
+def find_first_and_last_digit_or_string(text):
+    # Regex Expression for the first or last number(int or string), overlapping in case of 'nineight'
+    matches = re.findall(r'(?=(\d|one|two|three|four|five|six|seven|eight|nine))', text)
+    single_digits = {'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9}
+    if matches:
+        if matches[0].isnumeric():
+            first_match = matches[0]
+        else:
+            # if our match isn't an int, grab the value for it
+            first_match = single_digits[matches[0]]
+        if matches[-1].isnumeric():
+            last_match = matches[-1]
+        else:
+            # if our match isn't an int, grab the value for it
+            last_match = single_digits[matches[-1]]
 
-# Total Count
+        return int(first_match), int(last_match)
+    else:
+        return 'Failed'
+
+
+input_file = open('inputs/input_day_1.txt', 'r')
+input_file_lines = input_file.readlines()
+
+line_count = 0
+
 total = 0
 
 # Strips the file for each line
-for line in inputFileLines:
-    lineCount += 1
-    charCount = 0
+for line in input_file_lines:
 
-    # Speedy
-    # Time taken: 0.0009992122650146484s
-    firstDigit = 0
-    lastDigit = 0
-    for char in line:
-        charCount += 1
-        if char.isdigit():
-            firstDigit = int(char)
-            # print(f'Line{lineCount}: {line.strip()} = First digit {char}')
-            break
+    both_digits = find_first_and_last_digit_or_string(line)
 
-    charCount = len(line)
-    for char in line[::-1]:
-        charCount -= 1
-        if char.isdigit():
-            lastDigit = int(char)
-            # print(f'Line{lineCount}: {line.strip()} = Last digit {char}')
-            break
+    first_digit = both_digits[0]
+    last_digit = both_digits[-1]
 
-    firstDigit *= 10
-    total += firstDigit + lastDigit
+    # All of this is just for display
+    line_count += 1
+    print(f'Line {line_count}: {line.strip()} ')
+    print(f'First = {first_digit}, Last = {last_digit} ', end='\n \n')
 
-    # # Slow
-    # # Time taken: 0.0019979476928710938s
-    # # Regex for the first digit
-    # firstDigitPattern = re.compile(r'\d')
-    # firstDigitMatch = firstDigitPattern.search(line)
-    # firstDigit = int(firstDigitMatch.group())
-    #
-    # # Regex for the last digit
-    # lastDigitPattern = re.compile(r'\d(?=\D*$)')
-    # lastDigitMatch = lastDigitPattern.search(line)
-    # lastDigit = int(lastDigitMatch.group())
-    #
-    # # Print Digits
-    # # print(f'Line{lineCount}: {line.strip()} = First digit {firstDigit}')
-    # # print(f'Line{lineCount}: {line.strip()} = Last digit {lastDigit}')
-    # total += firstDigit * 10 + lastDigit
+    total += (first_digit * 10) + last_digit
 
-# Total
 print(f'{total}')
 
 # How fast was this?
 end_time = time.time()
-timeDiff = end_time - start_time
-print(f"Time taken: {timeDiff}s")
+time_diff = end_time - start_time
+print(f"Time taken: {time_diff}s")
